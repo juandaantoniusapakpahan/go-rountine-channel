@@ -66,3 +66,26 @@ func TestInOutChannel(t *testing.T) {
 
 	time.Sleep(5 * time.Second)
 }
+
+func TestSelectChannel(t *testing.T) {
+	channel1 := make(chan string)
+	channel2 := make(chan string)
+
+	go ChannelAsParam(channel1)
+	go ChannelAsParam(channel2)
+	counter := 0
+
+	for {
+		select {
+		case data := <-channel1:
+			fmt.Println("Channel 1: ", data)
+			counter++
+		case data := <-channel2:
+			fmt.Println("Channel 2: ", data)
+			counter++
+		}
+		if counter == 2 {
+			break
+		}
+	}
+}
